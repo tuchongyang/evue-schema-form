@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="visible" v-bind="$attrs" :title="title" width="60%" :before-close="remove">
-    <schema-form ref="dynamicForm" :fields="fields" :form-schema="dynamicValidateForm" style="margin-right: 40px" />
+    <schema-form ref="dynamicForm" :fields="fields" :form-schema="dynamicValidateForm" style="margin: 0 40px 0 20px" />
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="remove" :disabled="confirmLoading">取消</el-button>

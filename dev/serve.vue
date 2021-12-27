@@ -99,7 +99,7 @@ export default defineComponent({
     }
 
     const showDialogForm = () => {
-      FormDialog({
+      FormDialog.show({
         formSchema,
       })
     }
