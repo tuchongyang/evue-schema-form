@@ -1,20 +1,15 @@
 <template>
   <el-upload v-model:file-list="fileList" name="avatar" list-type="picture-card" class="avatar-uploader" :show-upload-list="false" :action="uploadUrl" :before-upload="beforeUpload" :headers="headers" :on-success="handleAvatarSuccess" @change="handleChange">
     <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
-    <div v-else>
-      <Loading v-if="loading"></Loading>
-      <el-icon v-else><Plus></Plus></el-icon>
-    </div>
   </el-upload>
 </template>
 <script>
 import { defineComponent, computed, ref } from "vue"
-import { Plus, Loading } from "@element-plus/icons-vue"
-import { ElMessage } from "element-plus"
+// import { ElMessage } from "element-plus"
 
 export default defineComponent({
   name: "SchemaFormFile",
-  components: { Plus, Loading },
+  components: {},
   props: {
     formItem: {
       // 表单项
@@ -44,13 +39,14 @@ export default defineComponent({
 
     const beforeUpload = (file) => {
       const isJpgOrPng = !props.formItem.fileType || file.type.indexOf(props.formItem.fileType) > -1
-      if (!isJpgOrPng) {
-        ElMessage.error("You can only upload " + props.formItem.fileType + " file!")
-      }
+      // if (!isJpgOrPng) {
+      //   ElMessage.error("You can only upload " + props.formItem.fileType + " file!")
+      // }
       const isLt2M = file.size - props.formItem.maxsize
-      if (props.formItem.maxsize && !isLt2M) {
-        ElMessage.error("Image must smaller than " + props.formItem.maxsize + " B!")
-      }
+      // if (props.formItem.maxsize && !isLt2M) {
+      //   ElMessage.error("Image must smaller than " + props.formItem.maxsize + " B!")
+      // }
+      isJpgOrPng && isLt2M && props.formItem.beforeUpload && props.formItem.beforeUpload(isJpgOrPng, isLt2M)
       return isJpgOrPng && isLt2M
     }
 
