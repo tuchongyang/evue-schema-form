@@ -1,2 +1,3 @@
 import { SchemaForm } from "./SchemaForm/index"
-export { SchemaForm }
+import FormDialog from "./FormDialog/index"
+export { SchemaForm, FormDialog }

@@ -8,18 +8,21 @@
         </div>
       </template>
     </schema-form>
+    <el-button @click="showDialogForm">弹窗表单</el-button>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from "vue"
-import { SchemaForm } from "../src"
+import { SchemaForm, FormDialog } from "../src"
+import { FormSchema } from "../src/types"
+
 import { ElMessage } from "element-plus"
 export default defineComponent({
   name: "ServeDev",
   components: { SchemaForm },
   setup() {
-    const formSchema = {
+    const formSchema: FormSchema = {
       formItem: [
         { type: "input", label: "用户名", prop: "username", span: 12 },
         { type: "input", label: "姓名", prop: "name", span: 12 },
@@ -78,7 +81,7 @@ export default defineComponent({
         },
       ],
       rules: {
-        username: [{ required: "true", message: "请输入用户名", trigger: "blur" }],
+        username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
       },
     }
     const fields = {}
@@ -94,12 +97,20 @@ export default defineComponent({
     const clear = () => {
       formSchemaRef.value.schemaFormRef.resetFields()
     }
+
+    const showDialogForm = () => {
+      FormDialog({
+        formSchema,
+      })
+    }
+
     return {
       formSchema,
       fields,
       submit,
       clear,
       formSchemaRef,
+      showDialogForm,
     }
   },
 })

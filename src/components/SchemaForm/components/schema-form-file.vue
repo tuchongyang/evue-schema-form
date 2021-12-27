@@ -1,6 +1,6 @@
 <template>
   <el-upload v-model:file-list="fileList" name="avatar" list-type="picture-card" class="avatar-uploader" :show-upload-list="false" :action="uploadUrl" :before-upload="beforeUpload" :headers="headers" :on-success="handleAvatarSuccess" @change="handleChange">
-    <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+    <!-- <img v-if="imageUrl" :src="imageUrl" alt="avatar" /> -->
   </el-upload>
 </template>
 <script>
