@@ -6,7 +6,7 @@
 
 ## 安装
 
-```shell
+``` shell
 
 npm instll @evue/schema-form -S
 
@@ -16,7 +16,7 @@ npm instll @evue/schema-form -S
 
 全局引用
 
-```vue
+```javascript
 
 import {SchemaForm} from "@evue/schema-form" 
 
@@ -25,6 +25,8 @@ app.component(SchemaForm)
 ```
 
 局部引用
+
+注：全局引用后，无需局部引用。
 
 ``` vue
 <template>
@@ -38,7 +40,7 @@ app.component(SchemaForm)
     </schema-form>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, ref } from "vue"
 import { SchemaForm } from "@evue/schema-form" 
 
@@ -87,7 +89,7 @@ export default defineComponent({
           label: "头像",
           prop: "avatar",
           span: 12,
-          success: (file: File) => {
+          success: (file) => {
             console.log("这里是上传 的文件", file)
           },
         },
@@ -99,8 +101,8 @@ export default defineComponent({
           action: "/api/file/upload",
           maxsize: 1024 * 1024 * 50,
           fileType: "image",
-          success: (file: File) => {
-            console.log("这里是上传 的文件11", file)
+          success: (res, file) => {
+            console.log(res, file)
           },
         },
       ],
@@ -112,7 +114,7 @@ export default defineComponent({
 
     const formSchemaRef = ref()
     const submit = () => {
-      formSchemaRef.value.validate((valid: boolean) => {
+      formSchemaRef.value.validate((valid) => {
         if (valid) {
           console.log("提交成功")
         }
@@ -156,7 +158,7 @@ app.use(FormDialog.install)
     <el-button type="primary" @click="showDialogForm">打开弹窗表单</el-button>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, ref } from "vue"
 import { FormDialog } from "@evue/schema-form" 
 
@@ -205,7 +207,7 @@ export default defineComponent({
           label: "头像",
           prop: "avatar",
           span: 12,
-          success: (file: File) => {
+          success: (file) => {
             console.log("这里是上传 的文件", file)
           },
         },
@@ -217,8 +219,8 @@ export default defineComponent({
           action: "/api/file/upload",
           maxsize: 1024 * 1024 * 50,
           fileType: "image",
-          success: (file: File) => {
-            console.log("这里是上传 的文件11", file)
+          success: (res, file) => {
+            console.log(res, file)
           },
         },
       ],

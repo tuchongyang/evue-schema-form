@@ -1,6 +1,6 @@
 {
   "name": "@evue/schema-form",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": false,
   "scripts": {
     "dev": "vue-cli-service serve dev/serve.js",
@@ -10,12 +10,22 @@
     "lib": "vue-cli-service build --target lib --name evue-schema-form --dest lib src/index.ts",
     "prepublish": "npm run lib"
   },
+  "keywords": [
+    "schema-form",
+    "vue",
+    "vue3",
+    "form",
+    "element-plus"
+  ],
   "types": "src/index.d.ts",
   "main": "lib/evue-schema-form.common.js",
   "homepage": "https://github.com/tuchongyang/evue-schema-form",
   "repository": {
     "type": "git",
     "url": "https://github.com/tuchongyang/evue-schema-form"
+  },
+  "bugs": {
+    "url": "https://github.com/tuchongyang/evue-schema-form/issues"
   },
   "dependencies": {
     "core-js": "^3.8.3",
