@@ -1,15 +1,16 @@
 <template>
   <el-upload v-model:file-list="fileList" name="avatar" list-type="picture-card" class="avatar-uploader" :show-upload-list="false" :action="uploadUrl" :before-upload="beforeUpload" :headers="headers" :on-success="handleAvatarSuccess" @change="handleChange">
-    <!-- <img v-if="imageUrl" :src="imageUrl" alt="avatar" /> -->
+    <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+    <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
   </el-upload>
 </template>
 <script>
 import { defineComponent, computed, ref } from "vue"
-// import { ElMessage } from "element-plus"
+import { Plus } from "@element-plus/icons-vue"
 
 export default defineComponent({
   name: "SchemaFormFile",
-  components: {},
+  components: { Plus },
   props: {
     formItem: {
       // 表单项

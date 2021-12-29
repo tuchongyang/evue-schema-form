@@ -1,6 +1,6 @@
 <template>
   <el-form ref="schemaFormRef" :model="modelRef" :rules="rulesRef" v-bind="$attrs" class="schema-form" style="display: flex; flex-wrap: wrap; position: relative; box-sizing: border-box" :label-width="formSchema.labelWidth || '110px'">
-    <template v-for="formItem in schemaItems" :key="formItem.field">
+    <template v-for="formItem in schemaItems" :key="formItem.prop">
       <el-form-item :label="formItem.label" :prop="formItem.prop" :label-width="formItem.labelWidth" :style="{ maxWidth: (100 * formItem.span) / 24 + '%', flex: '0 0 ' + (100 * formItem.span) / 24 + '%' }">
         <component :is="getComponent(formItem.type)" v-model="modelRef[formItem.prop]" :form-item="formItem" />
       </el-form-item>
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, getCurrentInstance, isReactive, ref, isRef, createVNode, computed } from "vue"
+import { defineComponent, reactive, getCurrentInstance, isReactive, ref, isRef, createVNode, computed, watch, toRefs } from "vue"
 import { isFunction, isAsyncFunction } from "./utils/is"
 import components from "./components"
 
@@ -34,8 +34,13 @@ export default defineComponent({
       type: Object,
       default: () => ({}),
     },
+    modelValue: {
+      type: Object,
+      default: undefined,
+    },
   },
-  setup(props) {
+  emits: ["update:modelValue"],
+  setup(props, { emit }) {
     // a-form
     const schemaFormRef = ref()
     // 表单实例
@@ -49,8 +54,27 @@ export default defineComponent({
         return previousValue
       }, {})
     )
+    watch(
+      () => modelRef,
+      (val) => {
+        emit("update:modelValue", toRefs(val))
+      },
+      {
+        deep: true,
+      }
+    )
+    watch(
+      () => props.modelValue,
+      (val) => {
+        Object.assign(modelRef, val)
+      },
+      {
+        deep: true,
+      }
+    )
     // 如果有默认值，则覆盖
     props.fields && Object.assign(modelRef, props.fields)
+    props.modelValue && Object.assign(modelRef, props.modelValue)
     // 异步设置默认数据
     props.formSchema.formItem.forEach(async (item) => {
       // 是否需要loading
@@ -62,7 +86,7 @@ export default defineComponent({
         item.options = await item.asyncOptions(item, formInstance).finally(() => (item.loading = false))
       } else if (isFunction(item.asyncValue) || isAsyncFunction(item.asyncValue)) {
         // 异步默认值
-        modelRef[item.field] = await item.asyncValue(item, formInstance).finally(() => (item.loading = false))
+        modelRef[item.prop] = await item.asyncValue(item, formInstance).finally(() => (item.loading = false))
       }
     })
 
@@ -80,14 +104,7 @@ export default defineComponent({
 
     // 生成表单验证规则
     const rulesRef = computed(() => {
-      return (
-        (props.formSchema.rules &&
-          schemaItems.value.reduce((next, cur) => {
-            next[cur.prop] = props.formSchema.rules[cur.prop]
-            return next
-          }, {})) ||
-        {}
-      )
+      return props.formSchema.rules
     })
 
     const preset = ["input", "select", "radio", "checkbox", "input-number", "input-range", "switch", "file", "input-password", "date-picker", "color-picker", "value"]

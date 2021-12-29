@@ -10,14 +10,21 @@ interface FormItem {
   options?: Array<OptionLabel>
   span?: number
   value?: string | number | Array<string | number>
+  props?: {
+    [key: string]: string | boolean | number
+  }
+  action?: string
+  maxsize?: number
+  fileType?: string
+  success?: (file: File) => void
 }
 export interface FormItemRule extends RuleItem {
   trigger?: string
 }
 export declare interface FormSchema {
   formItem: Array<FormItem>
-  rules: {
+  rules?: {
     [key: string]: Array<FormItemRule>
   }
-  labelWidth: string
+  labelWidth?: string
 }

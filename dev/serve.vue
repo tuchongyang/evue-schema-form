@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <schema-form ref="formSchemaRef" class="center-form" :fields="fields" :form-schema="formSchema" :label-width="formSchema.labelWidth || '110px'">
+    <schema-form v-model="formModel" ref="formSchemaRef" class="center-form" :fields="fields" :form-schema="formSchema" :label-width="formSchema.labelWidth || '110px'">
       <template v-slot:operate-button>
         <div style="text-align: center">
           <el-button type="primary" @click="submit">提 交</el-button>
@@ -16,17 +16,35 @@
 import { defineComponent, ref } from "vue"
 import { SchemaForm, FormDialog } from "../src"
 import { FormSchema } from "../src/types"
-
+import type { InternalRuleItem } from "async-validator"
 import { ElMessage } from "element-plus"
 export default defineComponent({
   name: "ServeDev",
   components: { SchemaForm },
   setup() {
+    const formModel = ref({ username: "123", password: "" })
+    var validatePass1 = (rule: InternalRuleItem, value: string | number, callback: (err?: Error) => Error | void) => {
+      if (value !== 0 && !value) {
+        callback(new Error("请输入密码"))
+      } else {
+        callback()
+      }
+    }
+    var validatePass2 = (rule: InternalRuleItem, value: string | number, callback: (err?: Error) => Error | void) => {
+      if (value !== 0 && !value) {
+        callback(new Error("请再次输入密码"))
+      } else if (value !== formModel.value.password) {
+        callback(new Error("两次输入密码不一致!"))
+      } else {
+        callback()
+      }
+    }
     const formSchema: FormSchema = {
       formItem: [
         { type: "input", label: "用户名", prop: "username", span: 12 },
         { type: "input", label: "姓名", prop: "name", span: 12 },
         { type: "input-password", label: "密码", prop: "password", span: 24 },
+        { type: "input-password", label: "确认密码", prop: "repassword", span: 24 },
         {
           type: "select",
           label: "角色",
@@ -82,6 +100,8 @@ export default defineComponent({
       ],
       rules: {
         username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+        password: [{ validator: validatePass1, trigger: "blur" }],
+        repassword: [{ validator: validatePass2, trigger: "blur" }],
       },
     }
     const fields = {}
@@ -111,6 +131,7 @@ export default defineComponent({
       clear,
       formSchemaRef,
       showDialogForm,
+      formModel,
     }
   },
 })
