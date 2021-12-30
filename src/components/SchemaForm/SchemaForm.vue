@@ -77,15 +77,13 @@ export default defineComponent({
     props.modelValue && Object.assign(modelRef, props.modelValue)
     // 异步设置默认数据
     props.formSchema.formItem.forEach(async (item) => {
-      // 是否需要loading
-      if (Object.prototype.hasOwnProperty.call(item, "loading")) {
-        item.loading = true
-      }
       // 异步选项
       if (isFunction(item.asyncOptions) || isAsyncFunction(item.asyncOptions)) {
+        item.loading = true
         item.options = await item.asyncOptions(item, formInstance).finally(() => (item.loading = false))
       } else if (isFunction(item.asyncValue) || isAsyncFunction(item.asyncValue)) {
         // 异步默认值
+        item.loading = true
         modelRef[item.prop] = await item.asyncValue(item, formInstance).finally(() => (item.loading = false))
       }
     })
@@ -122,8 +120,16 @@ export default defineComponent({
         return type
       }
     }
+    // 供外部使用
     const validate = (callback) => {
       return schemaFormRef.value.validate(callback)
+    }
+    // 调用某个表单项的异步数据接口
+    const loadOptions = async (prop) => {
+      const cur = props.formSchema.formItem.find((a) => a.prop == prop)
+      cur.loading = true
+      cur.options = await cur.asyncOptions(cur, formInstance).finally(() => (cur.loading = false))
+      return cur
     }
 
     return {
@@ -133,6 +139,7 @@ export default defineComponent({
       getComponent,
       schemaItems,
       validate,
+      loadOptions,
     }
   },
 })

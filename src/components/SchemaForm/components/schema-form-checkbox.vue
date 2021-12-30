@@ -1,22 +1,22 @@
 <template>
-  <el-checkbox-group v-model="model" style="width: 100%" v-on="formItem.eventObject">
-    <el-row>
-      <template v-for="option in formItem.options" :key="option.value">
-        <el-col :span="8">
-          <el-checkbox :value="option.value">
-            {{ option.label }}
-          </el-checkbox>
-        </el-col>
-      </template>
-    </el-row>
+  <div class="loading" style="color: #999; font-size: 12px" v-if="formItem.loading">
+    <el-icon class="is-loading"><Loading /></el-icon> 加载中...
+  </div>
+  <el-checkbox-group v-model="model" style="width: 100%" v-on="formItem.eventObject" v-else>
+    <template v-for="option in formItem.options" :key="option.value">
+      <el-checkbox :label="option.value">
+        {{ option.label }}
+      </el-checkbox>
+    </template>
   </el-checkbox-group>
 </template>
 <script>
 import { defineComponent, computed } from "vue"
+import { Loading } from "@element-plus/icons-vue"
 
 export default defineComponent({
   name: "SchemaFormCheckbox",
-  components: {},
+  components: { Loading },
   props: {
     formItem: {
       // 表单项
@@ -31,6 +31,9 @@ export default defineComponent({
       get: () => props.modelValue,
       set: (val) => emit("update:modelValue", val),
     })
+    if (!(model.value instanceof Array)) {
+      model.value = []
+    }
 
     return {
       model,

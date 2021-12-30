@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue"
+import { defineComponent, ref, Ref } from "vue"
 import { SchemaForm, FormDialog } from "../src"
 import { FormSchema } from "../src/types"
 import type { InternalRuleItem } from "async-validator"
@@ -39,32 +39,72 @@ export default defineComponent({
         callback()
       }
     }
-    const formSchema: FormSchema = {
+
+    const asyncOptions2 = function () {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve([
+            { label: "超级管理员", value: 1 },
+            { label: "普通管理员", value: 2 },
+          ])
+        }, 1000)
+      })
+    }
+    const asyncOptions1 = function () {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve([
+            { label: "男", value: 1 },
+            { label: "女", value: 2 },
+            { label: "其他", value: 3 },
+          ])
+        }, 1000)
+      })
+    }
+    const asyncOptions = function () {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve([
+            { label: "服装", value: 1 },
+            { label: "数码", value: 2 },
+            { label: "母婴", value: 3 },
+          ])
+        }, 1000)
+      })
+    }
+    const formSchema: Ref<FormSchema> = ref({
       formItem: [
         { type: "input", label: "用户名", prop: "username", span: 12 },
         { type: "input", label: "姓名", prop: "name", span: 12 },
         { type: "input-password", label: "密码", prop: "password", span: 24 },
         { type: "input-password", label: "确认密码", prop: "repassword", span: 24 },
         {
-          type: "select",
+          type: "checkbox",
           label: "角色",
           prop: "role",
-          options: [
-            { label: "超级管理员", value: 1 },
-            { label: "普通管理员", value: 2 },
-          ],
+          options: [],
+          asyncOptions: asyncOptions2,
           span: 24,
         },
         {
           type: "radio",
           label: "性别",
           prop: "sex",
-          options: [
-            { label: "男", value: 1 },
-            { label: "女", value: 2 },
-          ],
+          // options: [
+          //   { label: "男", value: 1 },
+          //   { label: "女", value: 2 },
+          // ],
+          options: [],
+          asyncOptions: asyncOptions1,
           span: 12,
           value: 1,
+        },
+        {
+          type: "select",
+          label: "分类",
+          prop: "type",
+          asyncOptions,
+          span: 12,
         },
         {
           type: "input-number",
@@ -103,7 +143,7 @@ export default defineComponent({
         password: [{ validator: validatePass1, trigger: "blur" }],
         repassword: [{ validator: validatePass2, trigger: "blur" }],
       },
-    }
+    })
     const fields = {}
 
     const formSchemaRef = ref()

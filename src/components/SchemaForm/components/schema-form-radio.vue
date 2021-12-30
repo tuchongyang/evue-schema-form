@@ -1,5 +1,8 @@
 <template>
-  <el-radio-group v-model="model" v-on="formItem.eventObject">
+  <div class="loading" style="color: #999; font-size: 12px" v-if="formItem.loading">
+    <el-icon class="is-loading"><Loading /></el-icon> 加载中...
+  </div>
+  <el-radio-group v-model="model" v-on="formItem.eventObject" v-else>
     <template v-for="option in formItem.options" :key="option.value">
       <el-radio :label="option.value">
         {{ option.label }}
@@ -9,10 +12,11 @@
 </template>
 <script>
 import { defineComponent, computed } from "vue"
+import { Loading } from "@element-plus/icons-vue"
 
 export default defineComponent({
   name: "SchemaFormRadio",
-  components: {},
+  components: { Loading },
   props: {
     formItem: {
       // 表单项

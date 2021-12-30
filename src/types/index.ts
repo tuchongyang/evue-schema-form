@@ -8,6 +8,7 @@ interface FormItem {
   type: string
   label: string
   options?: Array<OptionLabel>
+  asyncOptions?: () => Promise<unknown>
   span?: number
   value?: string | number | Array<string | number>
   props?: {
